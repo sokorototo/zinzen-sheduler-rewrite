@@ -14,6 +14,13 @@ const instance = await WebAssembly.instantiate(module, {
 			let decoder = new TextDecoder();
 			let string = decoder.decode(readResult);
 			console.log(string);
+		},
+		exit(error_code) {
+			if (error_code != 0) {
+				throw new Error(`[WASM_ERROR; ErrorCode:${error_code}]`);
+			} else {
+				console.info("Webassembly has finished execution")
+			}
 		}
 	},
 });

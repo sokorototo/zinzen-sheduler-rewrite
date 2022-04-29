@@ -13,3 +13,6 @@ lto = true
 
 [build]
 target = "wasm32-unknown-unknown"
+
+[dependencies]
+nanoserde = "*"
