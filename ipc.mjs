@@ -9,11 +9,16 @@ const module = await WebAssembly.compile(buffer);
 // The current WASM instance
 const instance = await WebAssembly.instantiate(module, {
 	env: {
-		console_log(dataOffset) {
-			let readResult = new Uint8Array(wasmMemory.buffer, dataStart, dataOffset);
-			let decoder = new TextDecoder();
-			let string = decoder.decode(readResult);
-			console.log(string);
+		console_log(isString, dataOffset) {
+			if (isString) {
+				let readResult = new Uint8Array(wasmMemory.buffer, dataStart, dataOffset);
+				let decoder = new TextDecoder();
+				let string = decoder.decode(readResult);
+				console.log(string);
+			} else {
+				let readResult = new Uint8Array(wasmMemory.buffer, dataStart, dataOffset);
+				console.log(readResult);
+			}
 		},
 		exit(error_code) {
 			if (error_code != 0) {
@@ -31,5 +36,5 @@ const dataStart = instance.exports.get_data_pointer();
 // The wasm memory
 const wasmMemory = instance.exports.memory;
 
-// Call main
-instance.exports.main()
+// A simple entry point for debugging
+instance.exports.entry()
