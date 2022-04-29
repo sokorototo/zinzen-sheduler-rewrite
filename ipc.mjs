@@ -1,15 +1,30 @@
 import fs from "fs";
 
-let buffer = fs.readFileSync("./out/output.wasm");
-let module = await WebAssembly.compile(buffer);
-let instance = await WebAssembly.instantiate(module);
+// RAW wasm source
+const buffer = fs.readFileSync("./out/output.wasm");
 
-// obtain the module memory
-let wasmMemory = instance.exports.memory;
+// Compiled wasm module
+const module = await WebAssembly.compile(buffer);
 
-// create a buffer starting at the reference to the exported string
-let dataStart = instance.exports.get_data_pointer();
-let readResult = new Uint8Array(wasmMemory.buffer, dataStart, instance.exports.start());
+// The current WASM instance
+const instance = await WebAssembly.instantiate(module, {
+	env: {
+		console_log(dataOffset) {
+			let readResult = new Uint8Array(wasmMemory.buffer, dataStart, dataOffset);
+			let decoder = new TextDecoder();
+			let string = decoder.decode(readResult);
+			console.log(string);
+		}
+	},
+});
 
-// Create Decoder, and read text
-console.log(readResult);
+// Where the IPC buffer pointer starts at
+const dataStart = instance.exports.get_data_pointer();
+
+// The wasm memory
+const wasmMemory = instance.exports.memory;
+
+// Call main
+if (instance.exports.main() != 0) {
+	console.log("WASM has experienced an unexpected error!");
+}
