@@ -1,5 +1,25 @@
 use nanoserde::{DeJson, SerJson};
 
+use crate::{
+	console,
+	error::{exit, ErrorCode},
+	write_to_ipc, IPC_BUFFER,
+};
+
+/// Loads [Goal]s inserted into IPC by JavaScript
+pub unsafe fn load_goals_from_ipc(bytes: usize) -> Vec<Goal> {
+	let slice = &IPC_BUFFER[..bytes];
+	let string = match std::str::from_utf8(slice) {
+		Ok(str) => str,
+		Err(_) => exit(ErrorCode::DataInIPCNotValidUTF8, 0),
+	};
+
+	match DeJson::deserialize_json(string) {
+		Ok(ok) => ok,
+		Err(err) => console::log_err(ErrorCode::DeserializationError, err),
+	}
+}
+
 /// An internal ID that is auto-incremented for each goal declared
 static mut AUTO_INCREMENTING_ID: usize = 0;
 
