@@ -1,5 +1,7 @@
 use std::io::Read;
 
+use nanoserde::SerJson;
+
 mod tests;
 
 mod console;
@@ -11,7 +13,10 @@ mod schedule;
 mod task;
 
 #[no_mangle]
-extern "C" fn entry() {}
+extern "C" fn entry() {
+	let goal = goal::Goal::default();
+	console::log_str(goal.serialize_json());
+}
 
 #[no_mangle]
 pub unsafe extern "C" fn get_data_pointer() -> *const u8 {
@@ -29,11 +34,13 @@ pub const IPC_BUFFER_SIZE: usize = 1024 * 64;
 pub static mut IPC_BUFFER: [u8; IPC_BUFFER_SIZE] = [0; IPC_BUFFER_SIZE];
 
 /// This writes some data to the IPC buffer, then returns a pointer and an offset to the data
-pub(crate) unsafe fn write_to_ipc<R: Read>(mut source: R) {
-	if let Err(error) = source.read(&mut IPC_BUFFER) {
-		let data = error.to_string();
-		IPC_BUFFER[..data.len()].copy_from_slice(data.as_bytes());
+pub(crate) fn write_to_ipc<R: Read>(mut source: R) {
+	unsafe {
+		if let Err(error) = source.read(&mut IPC_BUFFER) {
+			let data = error.to_string();
+			IPC_BUFFER[..data.len()].copy_from_slice(data.as_bytes());
 
-		error::exit(error::ErrorCode::UnableToWriteToIPC, data.len());
+			error::exit(error::ErrorCode::UnableToWriteToIPC, data.len());
+		}
 	}
 }
