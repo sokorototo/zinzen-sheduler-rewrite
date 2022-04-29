@@ -7,46 +7,28 @@ use crate::{
 pub(crate) fn test_preprocessor() {
 	let goals = &[
 		Goal {
-			description: "Repair phone".into(),
-			fixed_time: None,
-			duration: 24,
 			repetition: Repetition::Once,
-			priority: 20,
+			..Default::default()
 		},
 		Goal {
-			description: "Get into Music".into(),
-			fixed_time: None,
-			duration: 24,
 			repetition: Repetition::Daily,
-			priority: 10,
+			..Default::default()
 		},
 		Goal {
-			description: "Wash clothes".into(),
-			fixed_time: None,
-			duration: 24,
 			repetition: Repetition::Weekly,
-			priority: 10,
+			..Default::default()
 		},
 		Goal {
-			description: "Repair phone".into(),
-			fixed_time: None,
-			duration: 24,
 			repetition: Repetition::Monthly,
-			priority: 20,
+			..Default::default()
 		},
 		Goal {
-			description: "Visit grandpa".into(),
-			fixed_time: None,
-			duration: 24,
 			repetition: Repetition::Monthly,
-			priority: 20,
+			..Default::default()
 		},
 		Goal {
-			description: "Refresh driver's license".into(),
-			fixed_time: None,
-			duration: 24,
 			repetition: Repetition::Annually,
-			priority: 10,
+			..Default::default()
 		},
 	];
 
