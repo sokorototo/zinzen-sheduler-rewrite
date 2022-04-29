@@ -24,7 +24,9 @@ pub fn log_str<S: AsRef<str>>(msg: S) {
 }
 
 /// Log a string to the console
-pub fn log_buf(data: &[u8]) {
+pub fn log_buf<S: AsRef<[u8]>>(data: S) {
+	let data = data.as_ref();
+
 	unsafe {
 		if data.len() >= IPC_BUFFER_SIZE {
 			let error_msg: &[u8] = b"The length of data to be logged to the console exceeds the size of the IPC_BUFFER";
