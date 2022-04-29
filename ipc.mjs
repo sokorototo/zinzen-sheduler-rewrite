@@ -19,7 +19,7 @@ const instance = await WebAssembly.instantiate(module, {
 			if (error_code != 0) {
 				throw new Error(`[WASM_ERROR; ErrorCode:${error_code}]`);
 			} else {
-				console.info("Webassembly has finished execution")
+				console.info("Webassembly has prematurely finished execution, without errors")
 			}
 		}
 	},
@@ -32,6 +32,4 @@ const dataStart = instance.exports.get_data_pointer();
 const wasmMemory = instance.exports.memory;
 
 // Call main
-if (instance.exports.main() != 0) {
-	console.log("WASM has experienced an unexpected error!");
-}
+instance.exports.main()
