@@ -6,10 +6,13 @@ TARGET=wasm32-unknown-unknown
 BINARY=target/$TARGET/release/output.wasm
 
 # Build
-cargo build --target $TARGET --release
+cargo build --target $TARGET --quiet
 
 # Process final binary
 wasm-strip $BINARY
 mkdir -p out
 wasm-opt -o out/output.wasm -O3 $BINARY
 ls -lh out/output.wasm
+
+# Finally execute wasm inside node.js
+node ipc.mjs
