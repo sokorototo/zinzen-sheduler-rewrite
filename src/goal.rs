@@ -3,7 +3,7 @@ use nanoserde::{DeJson, SerJson};
 use crate::{
 	console,
 	error::{exit, ErrorCode},
-	write_to_ipc, IPC_BUFFER,
+	IPC_BUFFER,
 };
 
 /// Loads [Goal]s inserted into IPC by JavaScript
@@ -53,13 +53,20 @@ impl Default for Goal {
 	}
 }
 
+/// How often should a task be included in the schedule
 #[derive(DeJson, SerJson, Debug)]
 pub enum Repetition {
+	/// If this value is `x`, then the user wants to do the task `x` times, irrespective of the timeline
 	Exact(usize),
+	/// Exactly once, eg you only need to go to buy a car once
 	Once,
+	/// Do the task each day in the schedule
 	Daily,
+	/// Do the task each week in the schedule
 	Weekly,
+	/// Do the task each month in the schedule
 	Monthly,
+	/// Do the task each year in the schedule
 	Annually,
 }
 
