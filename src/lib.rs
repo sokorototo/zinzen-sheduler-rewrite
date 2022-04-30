@@ -1,6 +1,7 @@
 use std::io::Read;
 
-use nanoserde::SerJson;
+use goal::load_goals_from_ipc;
+use preprocessor::PreProcessor;
 
 mod tests;
 
@@ -13,9 +14,11 @@ mod schedule;
 mod task;
 
 #[no_mangle]
-extern "C" fn entry() {
-	let goal = goal::Goal::default();
-	console::log_str(goal.serialize_json());
+unsafe extern "C" fn processGoals(bytes: usize, time_in_hours: usize) {
+	let goals = load_goals_from_ipc(bytes);
+
+	let tasks = PreProcessor::generate_tasks(&goals, time_in_hours);
+	tasks.iter().for_each(|task| console::log_str(task.serialize_json()));
 }
 
 #[no_mangle]

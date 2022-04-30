@@ -7,13 +7,8 @@ pub struct Task<'a> {
 }
 
 impl<'a> Task<'a> {
-	pub fn to_bytes(&self) -> [usize; 2] {
-		let mut buf = [0; 2];
-
-		buf[0] = self.goal.id;
-		buf[1] = self.completed.into();
-
-		buf
+	pub fn serialize_json(&self) -> String {
+		format!("{{\"goal_id\": {}, \"completed\": {}}}", self.goal.id, self.completed)
 	}
 }
 
