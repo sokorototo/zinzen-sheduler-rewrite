@@ -14,20 +14,6 @@ mod preprocessor;
 mod schedule;
 mod task;
 
-#[no_mangle]
-unsafe extern "C" fn processGoals(bytes: usize, time_in_hours: usize) {
-	let goals = load_goals_from_ipc(bytes);
-
-	let processed = PreProcessor::generate_tasks(&goals, time_in_hours);
-	let tasks: Tasks = processed.as_slice().into();
-	console::log_str(tasks.serialize_json())
-}
-
-#[no_mangle]
-pub unsafe extern "C" fn getDataPointer() -> *const u8 {
-	IPC_BUFFER.as_ptr()
-}
-
 /// A buffer where IPC Data is written to by Rust and read from by Javascript
 /// At any one moment, only one read and write is done to this buffer, WASM is single-threaded anyway
 pub const IPC_BUFFER_SIZE: usize = 1024 * 64;
@@ -43,4 +29,18 @@ pub(crate) fn write_to_ipc<R: Read>(mut source: R) {
 			error::exit(error::ErrorCode::UnableToWriteToIPC, data.len());
 		}
 	}
+}
+
+#[no_mangle]
+unsafe extern "C" fn processGoals(bytes: usize, time_in_hours: usize) {
+	let goals = load_goals_from_ipc(bytes);
+
+	let processed = PreProcessor::generate_tasks(&goals, time_in_hours);
+	let tasks: Tasks = processed.as_slice().into();
+	console::log_str(tasks.serialize_json())
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn getDataPointer() -> *const u8 {
+	IPC_BUFFER.as_ptr()
 }
