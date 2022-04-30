@@ -1,3 +1,4 @@
+#[allow(unused_imports)]
 use crate::{
 	goal::{Goal, Repetition},
 	preprocessor::PreProcessor,
