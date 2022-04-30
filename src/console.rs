@@ -7,7 +7,7 @@ use crate::{
 };
 
 extern "C" {
-	fn console_log(is_string: bool, offset: usize);
+	fn console_log(is_string: bool, ipc_offset: usize);
 }
 
 /// Log a string to the console

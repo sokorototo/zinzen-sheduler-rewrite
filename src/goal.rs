@@ -7,8 +7,9 @@ use crate::{
 };
 
 /// Loads [Goal]s inserted into IPC by JavaScript
-pub unsafe fn load_goals_from_ipc(bytes: usize) -> Vec<Goal> {
-	let slice = &IPC_BUFFER[..bytes];
+pub unsafe fn load_goals_from_ipc(ipc_offset: usize) -> Vec<Goal> {
+	let slice = &IPC_BUFFER[..ipc_offset];
+
 	let string = match std::str::from_utf8(slice) {
 		Ok(str) => str,
 		Err(_) => exit(ErrorCode::DataInIPCNotValidUTF8, 0),

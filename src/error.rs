@@ -1,7 +1,7 @@
 pub struct ErrorCode;
 
 extern "C" {
-	pub fn exit(exit_code: u8, offset: usize) -> !;
+	pub fn exit(exit_code: u8, ipc_offset: usize) -> !;
 }
 
 #[allow(non_upper_case_globals)]
