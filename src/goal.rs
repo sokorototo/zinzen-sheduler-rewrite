@@ -29,10 +29,10 @@ static mut AUTO_INCREMENTING_ID: usize = 0;
 pub struct Goal {
 	pub id: usize,
 	pub description: String,
-	pub fixed_time: Option<usize>,
 	pub duration: usize,
 	pub repetition: Repetition,
-	pub priority: usize,
+	pub time_constraint: Option<usize>,
+	pub location_constraint: Option<usize>,
 }
 
 impl Default for Goal {
@@ -44,11 +44,11 @@ impl Default for Goal {
 
 		Self {
 			id: new_id,
-			description: Default::default(),
-			fixed_time: Default::default(),
-			duration: Default::default(),
-			repetition: Default::default(),
-			priority: Default::default(),
+			description: "[NO DESCRIPTION]".to_string(),
+			duration: 0,
+			repetition: Repetition::Once,
+			time_constraint: None,
+			location_constraint: None,
 		}
 	}
 }
@@ -68,10 +68,4 @@ pub enum Repetition {
 	Monthly,
 	/// Do the task each year in the schedule
 	Annually,
-}
-
-impl Default for Repetition {
-	fn default() -> Repetition {
-		Repetition::Once
-	}
 }

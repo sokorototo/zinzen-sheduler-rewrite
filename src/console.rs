@@ -1,7 +1,8 @@
+#![allow(dead_code)]
 use std::error::Error;
 
 use crate::{
-	error::{self, exit, ErrorCode},
+	error::{self, ErrorCode},
 	write_to_ipc, IPC_BUFFER_SIZE,
 };
 

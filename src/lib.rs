@@ -2,6 +2,7 @@ use std::io::Read;
 
 use goal::load_goals_from_ipc;
 use preprocessor::PreProcessor;
+use task::Tasks;
 
 mod tests;
 
@@ -17,18 +18,14 @@ mod task;
 unsafe extern "C" fn processGoals(bytes: usize, time_in_hours: usize) {
 	let goals = load_goals_from_ipc(bytes);
 
-	let tasks = PreProcessor::generate_tasks(&goals, time_in_hours);
-	tasks.iter().for_each(|task| console::log_str(task.serialize_json()));
+	let processed = PreProcessor::generate_tasks(&goals, time_in_hours);
+	let tasks: Tasks = processed.as_slice().into();
+	console::log_str(tasks.serialize_json())
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn get_data_pointer() -> *const u8 {
+pub unsafe extern "C" fn getDataPointer() -> *const u8 {
 	IPC_BUFFER.as_ptr()
-}
-
-#[no_mangle]
-pub unsafe extern "C" fn get_ipc_buffer_size() -> usize {
-	IPC_BUFFER_SIZE
 }
 
 /// A buffer where IPC Data is written to by Rust and read from by Javascript

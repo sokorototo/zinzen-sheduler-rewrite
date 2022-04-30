@@ -31,7 +31,7 @@ const instance = await WebAssembly.instantiate(module, {
 });
 
 // Where the IPC buffer pointer starts at
-const dataStart = instance.exports.get_data_pointer();
+const dataStart = instance.exports.getDataPointer();
 
 // Load JSON
 const json = new Uint8Array(fs.readFileSync("t.json"));
