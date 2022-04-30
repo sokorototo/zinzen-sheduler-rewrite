@@ -44,7 +44,6 @@ pub fn log_buf<S: AsRef<[u8]>>(data: S) {
 /// Log a Rust error to JS console and exit
 pub fn log_err<E: Error>(error_code: u8, err: E) -> ! {
 	let data = err.to_string();
-	write_to_ipc(data.as_bytes());
 
 	unsafe {
 		if data.len() >= IPC_BUFFER_SIZE {
@@ -54,7 +53,7 @@ pub fn log_err<E: Error>(error_code: u8, err: E) -> ! {
 		};
 
 		write_to_ipc(data.as_bytes());
-		console_log(false, data.len());
+		console_log(true, data.len());
 
 		error::exit(error_code, data.len())
 	}
