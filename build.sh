@@ -6,7 +6,7 @@ TARGET=wasm32-unknown-unknown
 BINARY=target/$TARGET/release/output.wasm
 
 # Build
-cargo build --target $TARGET --quiet
+cargo build --target $TARGET --release
 
 # Process final binary
 wasm-strip $BINARY
